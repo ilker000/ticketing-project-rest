@@ -9,6 +9,8 @@ import com.spring.exception.TicketingProjectException;
 import com.spring.mapper.MapperUtil;
 import com.spring.service.UserService;
 import com.spring.util.JWTUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Tag(name = "Authentication Controller", description = "Authenticate API")
 public class LoginController {
 
     private AuthenticationManager authenticationManager;
@@ -35,6 +38,7 @@ public class LoginController {
 
     @PostMapping("/authenticate")
     @DefaultExceptionMessage(defaultMessage = "Bad Credentials")
+    @Operation(summary = "Login to application")
     public ResponseEntity<ResponseWrapper> doLogin(@RequestBody AuthenticationRequest authenticationRequest) throws TicketingProjectException {
         String password = authenticationRequest.getPassword();
         String username = authenticationRequest.getUsername();
