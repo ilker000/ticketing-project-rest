@@ -1,5 +1,6 @@
 package com.spring.exception;
 
+import com.spring.annotation.DefaultExceptionMessage;
 import com.spring.dto.DefaultExceptionMessageDto;
 import com.spring.entity.ResponseWrapper;
 import org.springframework.core.Ordered;
@@ -48,7 +49,7 @@ public class ExceptionMessageHandler {
     }
 
     private Optional<DefaultExceptionMessageDto> getMessageFromAnnotation(Method method) {
-        com.spring.annotation.DefaultExceptionMessage defaultExceptionMessage = method.getAnnotation(com.spring.annotation.DefaultExceptionMessage.class);
+        DefaultExceptionMessage defaultExceptionMessage = method.getAnnotation(DefaultExceptionMessage.class);
         if (defaultExceptionMessage != null) {
             DefaultExceptionMessageDto defaultExceptionMessageDto = DefaultExceptionMessageDto
                     .builder()

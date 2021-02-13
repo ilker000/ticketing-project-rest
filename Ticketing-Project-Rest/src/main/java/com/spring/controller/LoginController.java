@@ -1,5 +1,6 @@
 package com.spring.controller;
 
+import com.spring.annotation.DefaultExceptionMessage;
 import com.spring.dto.UserDTO;
 import com.spring.entity.ResponseWrapper;
 import com.spring.entity.User;
@@ -33,6 +34,7 @@ public class LoginController {
     }
 
     @PostMapping("/authenticate")
+    @DefaultExceptionMessage(defaultMessage = "Bad Credentials")
     public ResponseEntity<ResponseWrapper> doLogin(@RequestBody AuthenticationRequest authenticationRequest) throws TicketingProjectException {
         String password = authenticationRequest.getPassword();
         String username = authenticationRequest.getUsername();
