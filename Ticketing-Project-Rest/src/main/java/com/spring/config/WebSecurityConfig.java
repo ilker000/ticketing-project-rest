@@ -1,6 +1,6 @@
 package com.spring.config;
 
-import com.spring.service.SecurityFilter;
+import com.spring.filter.SecurityFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
