@@ -1,7 +1,6 @@
 package com.spring.filter;
 
 import com.spring.entity.User;
-import com.spring.enums.UserState;
 import com.spring.service.SecurityService;
 import com.spring.util.JWTUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,6 +49,6 @@ public class SecurityFilter extends OncePerRequestFilter {
     }
     private boolean checkIfUserIsValid(String username) {
         User currentUser = securityService.loadUser(username);
-        return currentUser != null && currentUser.getIsVerified() && currentUser.getState() == UserState.ACTIVE;
+        return currentUser != null && currentUser.isEnabled();
     }
 }

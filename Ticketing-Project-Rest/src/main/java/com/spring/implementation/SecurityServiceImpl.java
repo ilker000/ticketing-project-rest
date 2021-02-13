@@ -39,7 +39,7 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     @Override
-    public User loadUer(String param) {
+    public User loadUser(String param) {
         UserDTO user = userService.findByUserName(param);
         return mapperUtil.convert(user, new User());
     }
