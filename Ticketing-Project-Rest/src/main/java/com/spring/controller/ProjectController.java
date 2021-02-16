@@ -16,7 +16,6 @@ import java.util.List;
 @RequestMapping("/project")
 public class ProjectController {
 
-
     private ProjectService projectService;
     private UserService userService;
 
