@@ -14,6 +14,6 @@ public class MailDTO {
     private String message;
     private String token;
     private String subject;
-    private String urk;
+    private String url;
 
 }
