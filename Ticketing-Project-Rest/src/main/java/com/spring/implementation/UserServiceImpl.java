@@ -125,4 +125,9 @@ public class UserServiceImpl implements UserService {
                 return true;
         }
     }
+
+    @Override
+    public UserDTO confirm(User user) {
+        return null;
+    }
 }
