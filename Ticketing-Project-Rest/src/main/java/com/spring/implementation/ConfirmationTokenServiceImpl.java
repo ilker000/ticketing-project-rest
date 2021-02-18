@@ -15,6 +15,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
 
     @Autowired
     private ConfirmationTokenRepository confirmationTokenRepository;
+
     @Autowired
     private JavaMailSender javaMailSender;
 

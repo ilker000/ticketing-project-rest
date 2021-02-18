@@ -22,7 +22,7 @@ public class OpenApiConfig {
         securitySchemeItem.setBearerFormat("JWT");
         securitySchemeItem.setIn(SecurityScheme.In.HEADER);
         securitySchemeItem.setName("Authorization");
-        Info infoVersion = new Info().title("Ticketing Application").version("snapshot");
+        Info infoVersion = new Info().title("Cybertek Ticketing Application").version("snapshot");
         SecurityRequirement securityItem = new SecurityRequirement().addList("bearer-jwt", Arrays.asList("read","write"));
 
         return new OpenAPI()
