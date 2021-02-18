@@ -64,23 +64,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO update(UserDTO dto) {
-
-        //Find current user
-        User user = userRepository.findByUserName(dto.getUserName());
-        //Map update user dto to entity object
-        User convertedUser = mapperUtil.convert(dto,new User());
-        convertedUser.setPassWord(passwordEncoder.encode(convertedUser.getPassWord()));
-        convertedUser.setEnabled(true);
-        //set id to the converted object
-        convertedUser.setId(user.getId());
-        //save updated user
-        userRepository.save(convertedUser);
-
-        return findByUserName(dto.getUserName());
-    }
-
-    @Override
     public UserDTO update(UserDTO dto) throws TicketingProjectException {
 
         //Find current user
@@ -100,6 +83,24 @@ public class UserServiceImpl implements UserService {
         userRepository.save(convertedUser);
 
         return findByUserName(dto.getUserName());
+    }
+
+    @Override
+    public void delete(String username) throws TicketingProjectException {
+        User user = userRepository.findByUserName(username);
+
+        if(user == null){
+            throw new TicketingProjectException("User Does Not Exists");
+        }
+
+        if(!checkIfUserCanBeDeleted(user)){
+            throw new TicketingProjectException("User can not be deleted. It is linked by a project ot task");
+        }
+
+        user.setUserName(user.getUserName() + "-" + user.getId());
+
+        user.setIsDeleted(true);
+        userRepository.save(user);
     }
 
     //hard delete

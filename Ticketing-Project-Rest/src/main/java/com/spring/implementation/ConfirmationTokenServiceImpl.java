@@ -4,6 +4,7 @@ import com.spring.entity.ConfirmationToken;
 import com.spring.exception.TicketingProjectException;
 import com.spring.repository.ConfirmationTokenRepository;
 import com.spring.service.ConfirmationTokenService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
@@ -12,13 +13,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
 
+    @Autowired
     private ConfirmationTokenRepository confirmationTokenRepository;
+    @Autowired
     private JavaMailSender javaMailSender;
-
-    public ConfirmationTokenServiceImpl(ConfirmationTokenRepository confirmationTokenRepository, JavaMailSender javaMailSender) {
-        this.confirmationTokenRepository = confirmationTokenRepository;
-        this.javaMailSender = javaMailSender;
-    }
 
     @Override
     public ConfirmationToken save(ConfirmationToken confirmationToken) {

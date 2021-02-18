@@ -93,10 +93,14 @@ public class UserController {
         return ResponseEntity.ok(new ResponseWrapper("Successfully deleted"));
     }
 
-
-
-
-
+    @GetMapping("/role")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong, try again!")
+    @Operation(summary = "Read by role")
+    @PreAuthorize("hasAnyAuthority('Admin','Manager')")
+    public ResponseEntity<ResponseWrapper> readByRole(@RequestParam String role){
+        List<UserDTO> userList = userService.listAllByRole(role);
+        return ResponseEntity.ok(new ResponseWrapper("Successfully read users by role",userList));
+    }
 
     private MailDTO createEmail(UserDTO userDTO){
 
