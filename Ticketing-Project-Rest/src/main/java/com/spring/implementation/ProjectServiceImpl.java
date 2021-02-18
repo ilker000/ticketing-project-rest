@@ -10,6 +10,7 @@ import com.spring.mapper.MapperUtil;
 import com.spring.mapper.ProjectMapper;
 import com.spring.mapper.UserMapper;
 import com.spring.repository.ProjectRepository;
+import com.spring.repository.UserRepository;
 import com.spring.service.ProjectService;
 import com.spring.service.TaskService;
 import com.spring.service.UserService;
@@ -23,13 +24,14 @@ import java.util.stream.Collectors;
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
-
+    private UserRepository userRepository;
     private ProjectRepository projectRepository;
     private UserService userService;
     private TaskService taskService;
     private MapperUtil mapperUtil;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository, UserService userService, TaskService taskService, MapperUtil mapperUtil) {
+    public ProjectServiceImpl(UserRepository userRepository, ProjectRepository projectRepository, UserService userService, TaskService taskService, MapperUtil mapperUtil) {
+        this.userRepository = userRepository;
         this.projectRepository = projectRepository;
         this.userService = userService;
         this.taskService = taskService;
@@ -66,42 +68,71 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void update(ProjectDTO dto) {
+    public ProjectDTO update(ProjectDTO dto) throws TicketingProjectException {
+
         Project project = projectRepository.findByProjectCode(dto.getProjectCode());
-        Project convertedProject = projectMapper.convertToEntity(dto);
-        convertedProject.setId(project.getId());
-        convertedProject.setProjectStatus(project.getProjectStatus());
-        projectRepository.save(convertedProject);
+
+        if(project == null){
+            throw new TicketingProjectException("Project does not exist");
+        }
+
+        Project convertedProject = mapperUtil.convert(dto,new Project());
+
+        Project updatedProject = projectRepository.save(convertedProject);
+
+        return mapperUtil.convert(updatedProject,new ProjectDTO());
+
     }
 
     @Override
-    public void delete(String code) {
+    public void delete(String code) throws TicketingProjectException {
+
         Project project = projectRepository.findByProjectCode(code);
+
+        if(project == null){
+            throw new TicketingProjectException("Project does not exist");
+        }
+
         project.setIsDeleted(true);
 
         project.setProjectCode(project.getProjectCode() +  "-" + project.getId());
+
         projectRepository.save(project);
 
-        taskService.deleteByProject(projectMapper.convertToDto(project));
+        taskService.deleteByProject(mapperUtil.convert(project,new ProjectDTO()));
     }
 
     @Override
-    public void complete(String projectCode) {
+    public ProjectDTO complete(String projectCode) throws TicketingProjectException {
+
         Project project = projectRepository.findByProjectCode(projectCode);
+
+        if(project == null){
+            throw new TicketingProjectException("Project does not exist");
+        }
+
         project.setProjectStatus(Status.COMPLETE);
-        projectRepository.save(project);
+        Project completedProject = projectRepository.save(project);
+
+        return mapperUtil.convert(completedProject,new ProjectDTO());
     }
 
     @Override
-    public List<ProjectDTO> listAllProjectDetails() {
+    public List<ProjectDTO> listAllProjectDetails() throws TicketingProjectException {
 
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        UserDTO currentUserDTO = userService.findByUserName(username);
-        User user = userMapper.convertToEntity(currentUserDTO);
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long currentId = Long.parseLong(id);
+
+        User user = userRepository.findById(currentId).orElseThrow(() -> new TicketingProjectException("This manager does not exists"));
+
         List<Project> list = projectRepository.findAllByAssignedManager(user);
 
+        if(list.size() == 0 ){
+            throw new TicketingProjectException("This manager does not have any project assigned");
+        }
+
         return list.stream().map(project -> {
-            ProjectDTO obj = projectMapper.convertToDto(project);
+            ProjectDTO obj = mapperUtil.convert(project,new ProjectDTO());
             obj.setUnfinishedTaskCounts(taskService.totalNonCompletedTasks(project.getProjectCode()));
             obj.setCompleteTaskCounts(taskService.totalCompletedTasks(project.getProjectCode()));
             return obj;
@@ -114,7 +145,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<ProjectDTO> readAllByAssignedManager(User user) {
         List<Project> list = projectRepository.findAllByAssignedManager(user);
-        return list.stream().map(obj ->projectMapper.convertToDto(obj)).collect(Collectors.toList());
+        return list.stream().map(obj ->mapperUtil.convert(obj,new ProjectDTO())).collect(Collectors.toList());
     }
 
     @Override
@@ -122,7 +153,22 @@ public class ProjectServiceImpl implements ProjectService {
 
         return projectRepository.findAllByProjectStatusIsNot(Status.COMPLETE)
                 .stream()
-                .map(project -> projectMapper.convertToDto(project))
+                .map(project -> mapperUtil.convert(project,new ProjectDTO()))
                 .collect(Collectors.toList());
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
