@@ -1,5 +1,6 @@
 package com.spring.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.spring.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Setter
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer"}, ignoreUnknown = true)
 public class ProjectDTO {
 
     private Long id;
