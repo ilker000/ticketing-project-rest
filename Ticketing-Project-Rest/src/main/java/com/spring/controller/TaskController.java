@@ -50,7 +50,7 @@ public class TaskController {
     @GetMapping("/{id}")
     @DefaultExceptionMessage(defaultMessage = "Something went wrong,please try again!")
     @Operation(summary = "Read task by id")
-    @PreAuthorize("hasAnyAuthority('Manager',Employee)")
+    @PreAuthorize("hasAnyAuthority('Manager','Employee')")
     public ResponseEntity<ResponseWrapper> readById(@PathVariable("id") Long id) throws TicketingProjectException {
         TaskDTO currentTask = taskService.findById(id);
         return ResponseEntity.ok(new ResponseWrapper("Successfully retrieved task",currentTask));
@@ -64,6 +64,44 @@ public class TaskController {
         TaskDTO createdTask = taskService.save(task);
         return ResponseEntity.ok(new ResponseWrapper("Successfully task created",createdTask));
     }
+
+    @DeleteMapping("/{id}")
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong,please try again!")
+    @Operation(summary = "Delete a task")
+    @PreAuthorize("hasAuthority('Manager')")
+    public ResponseEntity<ResponseWrapper> delete(@PathVariable("id") Long id) throws TicketingProjectException {
+        taskService.delete(id);
+        return ResponseEntity.ok(new ResponseWrapper("Successfully deleted"));
+    }
+
+    @PutMapping
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong,please try again!")
+    @Operation(summary = "Update task")
+    @PreAuthorize("hasAuthority('Manager')")
+    public ResponseEntity<ResponseWrapper> updateTask(@RequestBody TaskDTO task) throws TicketingProjectException {
+        TaskDTO updatedTask = taskService.update(task);
+        return ResponseEntity.ok(new ResponseWrapper("Successfully updated",updatedTask));
+    }
+
+    @GetMapping("/employee")
+    @Operation(summary = "Read all non complete tasks")
+    @PreAuthorize("hasAuthority('Employee')")
+    public ResponseEntity<ResponseWrapper> employeeReadAllNonCompleteTask() throws TicketingProjectException {
+        List<TaskDTO> tasks = taskService.listAllTasksByStatusIsNot(Status.COMPLETE);
+        return ResponseEntity.ok(new ResponseWrapper("Successfully read non completed current user tasks",tasks));
+    }
+
+    public ResponseEntity<ResponseWrapper> employeeUpdateTask(@RequestBody TaskDTO taskDTO) throws TicketingProjectException {
+        TaskDTO task = taskService.updateStatus(taskDTO);
+        return ResponseEntity.ok(new ResponseWrapper("Successfully employee task status updated",task));
+    }
+
+
+
+
+
+
+
 
 
 
