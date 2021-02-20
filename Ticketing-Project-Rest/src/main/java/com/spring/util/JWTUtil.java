@@ -17,7 +17,7 @@ import java.util.function.Function;
 public class JWTUtil {
 
     @Value("${security.jwt.secret-key}")
-    private String secret = "cybertek";
+    private String secret = "spring";
 
     public String generateToken(User user) {
 
