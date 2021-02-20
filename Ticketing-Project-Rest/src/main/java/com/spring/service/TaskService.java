@@ -5,23 +5,23 @@ import com.spring.dto.TaskDTO;
 import com.spring.entity.Task;
 import com.spring.entity.User;
 import com.spring.enums.Status;
+import com.spring.exception.TicketingProjectException;
 
 import java.util.List;
 
 public interface TaskService {
 
-    TaskDTO findById(Long id);
+    TaskDTO findById(Long id) throws TicketingProjectException;
 
     List<TaskDTO> listAllTasks();
 
-    Task save(TaskDTO dto);
+    TaskDTO save(TaskDTO dto);
 
     void update(TaskDTO dto);
 
     void delete(long id);
 
     int totalNonCompletedTasks(String projectCode);
-
     int totalCompletedTasks(String projectCode);
 
     void deleteByProject(ProjectDTO project);
@@ -30,7 +30,7 @@ public interface TaskService {
 
     List<TaskDTO> listAllTasksByStatusIsNot(Status status);
 
-    List<TaskDTO> listAllTasksByProjectManager();
+    List<TaskDTO> listAllTasksByProjectManager() throws TicketingProjectException;
 
     void updateStatus(TaskDTO dto);
 
