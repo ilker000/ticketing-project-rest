@@ -7,9 +7,7 @@ import com.spring.entity.Task;
 import com.spring.entity.User;
 import com.spring.enums.Status;
 import com.spring.exception.TicketingProjectException;
-import com.spring.mapper.MapperUtil;
-import com.spring.mapper.ProjectMapper;
-import com.spring.mapper.TaskMapper;
+import com.spring.util.MapperUtil;
 import com.spring.repository.TaskRepository;
 import com.spring.repository.UserRepository;
 import com.spring.service.TaskService;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

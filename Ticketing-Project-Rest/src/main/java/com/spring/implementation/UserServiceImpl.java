@@ -5,7 +5,7 @@ import com.spring.dto.TaskDTO;
 import com.spring.dto.UserDTO;
 import com.spring.entity.User;
 import com.spring.exception.TicketingProjectException;
-import com.spring.mapper.MapperUtil;
+import com.spring.util.MapperUtil;
 import com.spring.repository.UserRepository;
 import com.spring.service.ProjectService;
 import com.spring.service.TaskService;

@@ -5,23 +5,18 @@ import com.spring.dto.TaskDTO;
 import com.spring.entity.ResponseWrapper;
 import com.spring.enums.Status;
 import com.spring.exception.TicketingProjectException;
-import com.spring.service.ProjectService;
 import com.spring.service.TaskService;
-import com.spring.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/task")
+@Tag(name = "Task Controller",description = "Task API")
 public class TaskController {
 
     private TaskService taskService;

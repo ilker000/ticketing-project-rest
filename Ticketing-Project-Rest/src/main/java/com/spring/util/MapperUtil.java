@@ -1,4 +1,4 @@
-package com.spring.mapper;
+package com.spring.util;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

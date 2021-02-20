@@ -1,14 +1,11 @@
 package com.spring.implementation;
 
 import com.spring.dto.ProjectDTO;
-import com.spring.dto.UserDTO;
 import com.spring.entity.Project;
 import com.spring.entity.User;
 import com.spring.enums.Status;
 import com.spring.exception.TicketingProjectException;
-import com.spring.mapper.MapperUtil;
-import com.spring.mapper.ProjectMapper;
-import com.spring.mapper.UserMapper;
+import com.spring.util.MapperUtil;
 import com.spring.repository.ProjectRepository;
 import com.spring.repository.UserRepository;
 import com.spring.service.ProjectService;

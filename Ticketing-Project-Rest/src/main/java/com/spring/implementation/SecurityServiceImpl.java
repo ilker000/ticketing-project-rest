@@ -2,9 +2,7 @@ package com.spring.implementation;
 
 import com.spring.dto.UserDTO;
 import com.spring.entity.User;
-import com.spring.entity.common.UserPrincipal;
-import com.spring.mapper.MapperUtil;
-import com.spring.repository.UserRepository;
+import com.spring.util.MapperUtil;
 import com.spring.service.SecurityService;
 import com.spring.service.UserService;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
