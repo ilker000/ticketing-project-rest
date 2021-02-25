@@ -48,16 +48,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO findByUserName(String username) {
+    public UserDTO findByUserName(String username) throws AccessDeniedException {
         User user = userRepository.findByUserName(username);
+        checkForAuthorities(user);
         return mapperUtil.convert(user,new UserDTO());
     }
 
     @Override
     public UserDTO save(UserDTO dto) throws TicketingProjectException {
+
         User foundUser = userRepository.findByUserName(dto.getUserName());
-        if (foundUser!=null){
-            throw new TicketingProjectException("User already exist");
+
+        if(foundUser!=null){
+            throw new TicketingProjectException("User already exists");
         }
 
         User user =  mapperUtil.convert(dto,new User());
@@ -65,11 +68,12 @@ public class UserServiceImpl implements UserService {
 
         User save = userRepository.save(user);
 
-        return mapperUtil.convert(save, new UserDTO());
+        return mapperUtil.convert(save,new UserDTO());
+
     }
 
     @Override
-    public UserDTO update(UserDTO dto) throws TicketingProjectException {
+    public UserDTO update(UserDTO dto) throws TicketingProjectException, AccessDeniedException {
 
         //Find current user
         User user = userRepository.findByUserName(dto.getUserName());
@@ -80,9 +84,13 @@ public class UserServiceImpl implements UserService {
         //Map update user dto to entity object
         User convertedUser = mapperUtil.convert(dto,new User());
         convertedUser.setPassWord(passwordEncoder.encode(convertedUser.getPassWord()));
-        if (!user.getEnabled()){
+
+        if(!user.getEnabled()){
             throw new TicketingProjectException("User is not confirmed");
         }
+
+        checkForAuthorities(user);
+
         convertedUser.setEnabled(true);
 
         //set id to the converted object
@@ -141,18 +149,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO confirm(User user) {
+
         user.setEnabled(true);
         User confirmedUser = userRepository.save(user);
-        return mapperUtil.convert(confirmedUser, new UserDTO());
+
+        return mapperUtil.convert(confirmedUser,new UserDTO());
     }
 
     private void checkForAuthorities(User user) throws AccessDeniedException {
+
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication!=null && authentication.getName().equals("anonymousUser")){
+
+        if(authentication!=null && !authentication.getName().equals("anonymousUser")){
+
             Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
 
-            if (!authentication.getName().equals(user.getId().toString()) || roles.contains("Admin")){
-                throw  new AccessDeniedException("Access denied");
+            if(!(authentication.getName().equals(user.getId().toString()) || roles.contains("Admin"))){
+                throw new AccessDeniedException("Access is denied");
             }
         }
     }

@@ -34,4 +34,6 @@ public class RoleController {
         return ResponseEntity.ok(new ResponseWrapper("Successfully retrieved all roles",roleDTOList));
 
     }
+
+
 }
