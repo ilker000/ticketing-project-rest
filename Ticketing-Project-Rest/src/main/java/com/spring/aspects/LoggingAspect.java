@@ -15,28 +15,24 @@ public class LoggingAspect {
     Logger log = LoggerFactory.getLogger(LoggingAspect.class);
 
     @Pointcut("execution(* com.cybertek.controller.ProjectController.*(..)) || execution(* com.cybertek.controller.TaskController.*(..))")
-    private void anyControllerOperation(){}
+    private void anyControllerOperation() {
+    }
 
     @Before("anyControllerOperation()")
-    public void anyBeforeControllerOperationAdvice(JoinPoint joinPoint){
+    public void anyBeforeControllerOperationAdvice(JoinPoint joinPoint) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        log.info("Before(User : {} Method : {} - Parameters : {}",auth.getName(),joinPoint.getSignature().toShortString(),joinPoint.getArgs());
+        log.info("Before(User : {} Method : {} - Parameters : {}", auth.getName(), joinPoint.getSignature().toShortString(), joinPoint.getArgs());
     }
 
-    @AfterReturning(pointcut = "anyControllerOperation()",returning = "results")
-    public void anyAfterReturningControllerOperationAdvice(JoinPoint joinPoint,Object results){
+    @AfterReturning(pointcut = "anyControllerOperation()", returning = "results")
+    public void anyAfterReturningControllerOperationAdvice(JoinPoint joinPoint, Object results) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        log.info("AfterReturning(User : {} Method : {} - Results : {}",auth.getName(),joinPoint.getSignature().toShortString(),results.toString());
+        log.info("AfterReturning(User : {} Method : {} - Results : {}", auth.getName(), joinPoint.getSignature().toShortString(), results.toString());
     }
 
-    @AfterThrowing(pointcut = "anyControllerOperation()",throwing = "exception")
-    public void anyAfterThrowingControllerOperationAdvice(JoinPoint joinPoint,RuntimeException exception){
+    @AfterThrowing(pointcut = "anyControllerOperation()", throwing = "exception")
+    public void anyAfterThrowingControllerOperationAdvice(JoinPoint joinPoint, RuntimeException exception) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        log.info("After throwing(User : {} Method : {} - Exception : {}",auth.getName(),joinPoint.getSignature().toShortString(),exception.getLocalizedMessage());
-
+        log.info("After throwing(User : {} Method : {} - Exception : {}", auth.getName(), joinPoint.getSignature().toShortString(), exception.getLocalizedMessage());
     }
-
-
-
-
 }
