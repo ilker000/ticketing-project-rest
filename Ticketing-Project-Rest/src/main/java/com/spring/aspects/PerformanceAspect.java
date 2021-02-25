@@ -11,20 +11,28 @@ import org.springframework.context.annotation.Configuration;
 @Aspect
 @Configuration
 public class PerformanceAspect {
+
     Logger log = LoggerFactory.getLogger(PerformanceAspect.class);
-    @Pointcut("@annotation(com.spring.annotation.ExecutionTime)")
+
+    @Pointcut("@annotation(com.cybertek.annotation.ExecutionTime)")
     private void anyExecutionTimeOperation(){}
+
     @Around("anyExecutionTimeOperation()")
     public Object anyExecutionTimeOperationAdvice(ProceedingJoinPoint proceedingJoinPoint)  {
+
         long beforeTime = System.currentTimeMillis();
         Object result = null;
+
         try {
             result = proceedingJoinPoint.proceed();
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
+
         long afterTime = System.currentTimeMillis();
+
         log.info("Time taken to execute : {} ms (Method : {} - Parameters : {}",(afterTime-beforeTime),proceedingJoinPoint.getSignature().toShortString(),proceedingJoinPoint.getArgs());
+
         return result;
     }
 }

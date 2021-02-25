@@ -44,21 +44,24 @@ public class LoginController {
     @Operation(summary = "Login to application")
     @ExecutionTime
     public ResponseEntity<ResponseWrapper> doLogin(@RequestBody AuthenticationRequest authenticationRequest) throws TicketingProjectException, AccessDeniedException {
+
         String password = authenticationRequest.getPassword();
         String username = authenticationRequest.getUsername();
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, password);
         authenticationManager.authenticate(authentication);
+
         UserDTO foundUser = userService.findByUserName(username);
         User convertedUser = mapperUtil.convert(foundUser, new User());
 
-        if (!foundUser.isEnabled()){
+        if (!foundUser.isEnabled()) {
             throw new TicketingProjectException("Please verify your user");
         }
 
         String jwtToken = jwtUtil.generateToken(convertedUser);
 
-        return ResponseEntity.ok(new ResponseWrapper("Login successful", jwtToken));
+        return ResponseEntity.ok(new ResponseWrapper("Login Successful", jwtToken));
+
     }
 
     @DefaultExceptionMessage(defaultMessage = "Failed to confirm email, please try again!")
@@ -69,8 +72,8 @@ public class LoginController {
         ConfirmationToken confirmationToken = confirmationTokenService.readByToken(token);
         UserDTO confirmUser = userService.confirm(confirmationToken.getUser());
         confirmationTokenService.delete(confirmationToken);
+
         return ResponseEntity.ok(new ResponseWrapper("User has been confirmed!", confirmUser));
 
     }
-
 }
